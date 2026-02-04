@@ -2,30 +2,35 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>DTI Finance Tracker</title>
+<title>DTI Finance Wallet</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 :root {
-  --primary: #1abc9c;
-  --danger: #e74c3c;
-  --dark: #2c3e50;
-  --bg: #f5f7fa;
+  --primary: #00b894;
+  --danger: #d63031;
+  --dark: #2d3436;
+  --bg: #f5f6fa;
+  --card: #ffffff;
 }
 
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: 'Segoe UI', system-ui, sans-serif;
   background: var(--bg);
-  color: #333;
+  color: var(--dark);
 }
 
+/* HEADER */
 header {
-  background: var(--dark);
+  background: linear-gradient(135deg, #0984e3, #00b894);
   color: #fff;
-  padding: 16px 24px;
+  padding: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -36,104 +41,132 @@ header h1 {
   font-size: 20px;
 }
 
-header .actions button {
-  background: transparent;
-  border: 1px solid #fff;
+header button {
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.5);
   color: #fff;
   padding: 6px 12px;
-  border-radius: 6px;
+  border-radius: 20px;
   cursor: pointer;
-  margin-left: 8px;
 }
 
+/* CONTAINER */
 .container {
   max-width: 1100px;
-  margin: auto;
+  margin: -40px auto 40px;
+  padding: 20px;
+}
+
+/* WALLET CARD */
+.wallet {
+  background: linear-gradient(135deg, #6c5ce7, #0984e3);
+  color: #fff;
+  border-radius: 20px;
   padding: 24px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
 }
 
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.card {
-  background: #fff;
-  padding: 18px;
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-}
-
-.card h3 {
+.wallet h3 {
   margin: 0;
   font-size: 14px;
+  opacity: 0.9;
+}
+
+.wallet .balance {
+  font-size: 36px;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+/* STATS */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.stat {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+
+.stat span {
+  font-size: 13px;
   color: #777;
 }
 
-.card p {
-  font-size: 22px;
-  font-weight: bold;
-  margin-top: 6px;
+.stat h2 {
+  margin: 6px 0 0;
 }
 
 .income { color: var(--primary); }
 .expense { color: var(--danger); }
 
-.table-card {
-  background: #fff;
+/* CHART */
+.chart-card {
+  background: var(--card);
+  border-radius: 16px;
   padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  margin-top: 24px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
+/* HISTORY */
+.history {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 24px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
 }
 
-th, td {
-  padding: 12px;
+.history h3 {
+  margin-top: 0;
+}
+
+.tx {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
   border-bottom: 1px solid #eee;
-  text-align: center;
 }
 
-th {
-  font-size: 13px;
+.tx:last-child { border-bottom: none; }
+
+.tx .desc {
+  font-size: 14px;
+}
+
+.tx .date {
+  font-size: 12px;
   color: #777;
 }
 
-tr:hover { background: #fafafa; }
-
-.btn-delete {
-  background: var(--danger);
-  color: #fff;
-  border: none;
-  padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
+.tx .amount {
+  font-weight: bold;
 }
 
-#financeForm {
+.plus { color: var(--primary); }
+.minus { color: var(--danger); }
+
+/* ADMIN */
+#loginBox, #financeForm {
   display: none;
-  margin-bottom: 24px;
-  background: #fff;
-  padding: 18px;
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
-  gap: 10px;
+  background: var(--card);
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 24px;
 }
 
 input, button {
   padding: 10px;
-  border-radius: 6px;
+  border-radius: 8px;
   border: 1px solid #ddd;
+  width: 100%;
+  margin-bottom: 10px;
 }
 
 .btn-add {
@@ -142,24 +175,14 @@ input, button {
   border: none;
   cursor: pointer;
 }
-
-#loginBox {
-  display: none;
-  max-width: 300px;
-  margin: 60px auto;
-  background: #fff;
-  padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-}
 </style>
 </head>
 
 <body>
 
 <header>
-  <h1>📊 DTI Finance Tracker</h1>
-  <div class="actions">
+  <h1>💳 DTI Finance Wallet</h1>
+  <div>
     <button id="loginBtn" onclick="showLogin()">Admin Login</button>
     <button id="logoutBtn" onclick="logout()" style="display:none">Logout</button>
   </div>
@@ -167,9 +190,38 @@ input, button {
 
 <div class="container">
 
-  <!-- LOGIN -->
+  <!-- WALLET -->
+  <div class="wallet">
+    <h3>Saldo Saat Ini</h3>
+    <div class="balance" id="saldoHero">Rp 0</div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat">
+      <span>Pemasukan</span>
+      <h2 class="income" id="totalInput">0</h2>
+    </div>
+    <div class="stat">
+      <span>Pengeluaran</span>
+      <h2 class="expense" id="totalOutput">0</h2>
+    </div>
+  </div>
+
+  <!-- CHART -->
+  <div class="chart-card">
+    <canvas id="financeChart"></canvas>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="history">
+    <h3>Riwayat Transaksi</h3>
+    <div id="historyList"></div>
+  </div>
+
+  <!-- ADMIN LOGIN -->
   <div id="loginBox">
-    <h3 style="text-align:center">Login Admin</h3>
+    <h3>Login Admin</h3>
     <input id="username" placeholder="Username">
     <input id="password" type="password" placeholder="Password">
     <button class="btn-add" onclick="login()">Login</button>
@@ -179,153 +231,112 @@ input, button {
   <!-- ADMIN FORM -->
   <div id="financeForm">
     <h3>Tambah Transaksi</h3>
-    <form class="form-grid" onsubmit="addData(event)">
-      <input type="date" id="timelapse" required>
-      <input type="number" id="input" placeholder="Input" value="0">
-      <input type="number" id="output" placeholder="Output" value="0">
-      <input type="text" id="description" placeholder="Deskripsi">
-      <button class="btn-add" type="submit">Simpan</button>
-    </form>
-  </div>
-
-  <!-- SUMMARY -->
-  <div class="cards">
-    <div class="card">
-      <h3>Total Pemasukan</h3>
-      <p class="income" id="totalInput">0</p>
-    </div>
-    <div class="card">
-      <h3>Total Pengeluaran</h3>
-      <p class="expense" id="totalOutput">0</p>
-    </div>
-    <div class="card">
-      <h3>Saldo</h3>
-      <p id="saldo">0</p>
-    </div>
-  </div>
-
-  <!-- TABLE -->
-  <div class="table-card">
-    <table>
-      <thead>
-        <tr>
-          <th>Tanggal</th>
-          <th>Input</th>
-          <th>Output</th>
-          <th>Deskripsi</th>
-          <th>Aksi</th>
-        </tr>
-      </thead>
-      <tbody id="dataTable"></tbody>
-    </table>
+    <input type="date" id="timelapse" required>
+    <input type="number" id="input" placeholder="Input" value="0">
+    <input type="number" id="output" placeholder="Output" value="0">
+    <input type="text" id="description" placeholder="Deskripsi">
+    <button class="btn-add" onclick="addData(event)">Simpan</button>
   </div>
 
 </div>
 
 <script>
-const API_URL =
-  'https://script.google.com/macros/s/AKfycbwVdahYSS-hmo0KIuxigPQ0QvlC794jLcEbtBITj5o2fkoT0c54Y5CfoAxOcVIil3dS/exec';
-
+const API_URL = 'https://script.google.com/macros/s/AKfycbwVdahYSS-hmo0KIuxigPQ0QvlC794jLcEbtBITj5o2fkoT0c54Y5CfoAxOcVIil3dS/exec';
 let IS_ADMIN = false;
+let chart;
 
-/* ================= LOGIN ================= */
-function showLogin() {
-  document.getElementById('loginBox').style.display = 'block';
+/* LOGIN */
+function showLogin(){ loginBox.style.display='block'; }
+function logout(){
+  IS_ADMIN=false;
+  loginBox.style.display='none';
+  financeForm.style.display='none';
+  loginBtn.style.display='inline-block';
+  logoutBtn.style.display='none';
+  fetchData();
+}
+function login(){
+  fetch(API_URL+'?action=login',{
+    method:'POST',
+    body:JSON.stringify({username:username.value,password:password.value})
+  }).then(r=>r.json()).then(res=>{
+    if(res.status==='success'){
+      IS_ADMIN=true;
+      loginBox.style.display='none';
+      financeForm.style.display='block';
+      loginBtn.style.display='none';
+      logoutBtn.style.display='inline-block';
+      fetchData();
+    } else loginMsg.textContent=res.message;
+  });
 }
 
-function login() {
-  fetch(API_URL + '?action=login', {
-    method: 'POST',
-    body: JSON.stringify({
-      username: username.value,
-      password: password.value
-    })
-  })
-  .then(r => r.json())
-  .then(res => {
-    if (res.status === 'success') {
-      IS_ADMIN = true;
-      loginBox.style.display = 'none';
-      financeForm.style.display = 'block';
-      loginBtn.style.display = 'none';
-      logoutBtn.style.display = 'inline-block';
-      fetchData();
-    } else {
-      loginMsg.textContent = res.message;
+/* DATA */
+function fetchData(){
+  fetch(API_URL).then(r=>r.json()).then(res=>{
+    let tin=0,tout=0;
+    let labels=[],inputs=[],outputs=[];
+    historyList.innerHTML='';
+
+    res.data.forEach(d=>{
+      tin+=Number(d.Input);
+      tout+=Number(d.Output);
+
+      labels.push(d.Timelapse.split('T')[0]);
+      inputs.push(d.Input);
+      outputs.push(d.Output);
+
+      historyList.innerHTML+=`
+        <div class="tx">
+          <div>
+            <div class="desc">${d.Description||'-'}</div>
+            <div class="date">${labels.at(-1)}</div>
+          </div>
+          <div class="amount ${d.Input>0?'plus':'minus'}">
+            ${d.Input>0?'+':'-'}${d.Input>0?d.Input:d.Output}
+          </div>
+        </div>`;
+    });
+
+    totalInput.textContent=tin;
+    totalOutput.textContent=tout;
+    saldoHero.textContent='Rp '+(tin-tout);
+
+    drawChart(labels,inputs,outputs);
+  });
+}
+
+function drawChart(labels,inputs,outputs){
+  if(chart) chart.destroy();
+  chart=new Chart(document.getElementById('financeChart'),{
+    type:'line',
+    data:{
+      labels,
+      datasets:[
+        {label:'Input',data:inputs,borderWidth:2},
+        {label:'Output',data:outputs,borderWidth:2}
+      ]
     }
   });
 }
 
-function logout() {
-  IS_ADMIN = false;
-  financeForm.style.display = 'none';
-  loginBox.style.display = 'none';
-  loginBtn.style.display = 'inline-block';
-  logoutBtn.style.display = 'none';
-  fetchData(); // reload sebagai user
-}
-
-/* ================= DATA ================= */
-function fetchData() {
-  fetch(API_URL)
-    .then(r => r.json())
-    .then(res => {
-      let tin = 0, tout = 0;
-      dataTable.innerHTML = '';
-
-      res.data.forEach(d => {
-        tin += Number(d.Input);
-        tout += Number(d.Output);
-        dataTable.innerHTML += `
-          <tr>
-            <td>${d.Timelapse}</td>
-            <td>${d.Input}</td>
-            <td>${d.Output}</td>
-            <td>${d.Description}</td>
-            <td>
-              ${IS_ADMIN
-                ? `<button class="btn-delete"
-                     onclick="deleteData(${d.row})">Hapus</button>`
-                : '-'}
-            </td>
-          </tr>`;
-      });
-
-      totalInput.textContent = tin;
-      totalOutput.textContent = tout;
-      saldo.textContent = tin - tout;
-    });
-}
-
-function addData(e) {
-  e.preventDefault();
-  fetch(API_URL, {
-    method: 'POST',
-    body: JSON.stringify({
-      Timelapse: timelapse.value,
-      Input: input.value,
-      Output: output.value,
-      Description: description.value,
-      role: 'admin'
+function addData(){
+  fetch(API_URL,{
+    method:'POST',
+    body:JSON.stringify({
+      Timelapse:timelapse.value,
+      Input:input.value,
+      Output:output.value,
+      Description:description.value,
+      role:'admin'
     })
-  }).then(() => {
-    e.target.reset();
-    fetchData();
-  });
+  }).then(()=>{fetchData();});
 }
 
-function deleteData(row) {
-  if (!confirm('Hapus data ini?')) return;
-  fetch(API_URL, {
-    method: 'DELETE',
-    body: JSON.stringify({ row, role: 'admin' })
-  }).then(fetchData);
-}
-
-/* INIT USER MODE */
 fetchData();
 </script>
 
 </body>
 </html>
+
 
