@@ -287,7 +287,33 @@ function addData(){
       role:'admin'
     })
   }).then(()=>{
-    tim
+    timelapse.value='';
+    input.value=0;
+    output.value=0;
+    description.value='';
+    fetchData();
+  });
+}
+
+function deleteData(row){
+  if(!confirm('Hapus transaksi ini?')) return;
+
+  fetch(API_URL,{
+    method:'DELETE',
+    body:JSON.stringify({
+      row: row,
+      role:'admin'
+    })
+  }).then(fetchData);
+}
+
+/* INIT (USER MODE) */
+fetchData();
+</script>
+
+</body>
+</html>
+
 
 
 
