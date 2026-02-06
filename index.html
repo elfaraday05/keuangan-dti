@@ -9,28 +9,23 @@
 :root{
   --primary:#00b894;
   --danger:#d63031;
+  --edit:#0984e3;
   --dark:#2d3436;
   --bg:#f5f6fa;
   --card:#ffffff;
 }
-*{box-sizing:border-box}
 body{
   margin:0;
   font-family:'Segoe UI',system-ui,sans-serif;
   background:var(--bg);
-  color:var(--dark);
 }
-
-/* HEADER */
 header{
   background:linear-gradient(135deg,#0984e3,#00b894);
   color:#fff;
-  padding:18px 24px;
+  padding:16px 24px;
   display:flex;
   justify-content:space-between;
-  align-items:center;
 }
-header h1{margin:0;font-size:18px}
 header button{
   background:rgba(255,255,255,.2);
   border:1px solid rgba(255,255,255,.5);
@@ -39,105 +34,36 @@ header button{
   border-radius:20px;
   cursor:pointer;
 }
-
-/* LAYOUT */
 .container{
   max-width:1000px;
   margin:-40px auto 40px;
   padding:20px;
 }
-
-/* WALLET */
 .wallet{
   background:linear-gradient(135deg,#6c5ce7,#0984e3);
   color:#fff;
   border-radius:20px;
   padding:24px;
-  box-shadow:0 10px 30px rgba(0,0,0,.15);
 }
-.wallet span{font-size:13px;opacity:.9}
-.wallet h2{margin:6px 0 0;font-size:34px}
-
-/* STATS */
-.stats{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:16px;
-  margin-top:20px;
-}
-.stat{
-  background:var(--card);
-  padding:16px;
-  border-radius:16px;
-  box-shadow:0 6px 16px rgba(0,0,0,.08);
-}
-.stat span{font-size:13px;color:#777}
-.stat h3{margin:6px 0 0}
-.income{color:var(--primary)}
-.expense{color:var(--danger)}
-
-/* HISTORY */
-.history{
-  background:var(--card);
-  border-radius:16px;
-  padding:20px;
-  margin-top:24px;
-  box-shadow:0 6px 16px rgba(0,0,0,.08);
-}
-.history h3{margin-top:0}
-.tx{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:12px 0;
-  border-bottom:1px solid #eee;
-}
-.tx:last-child{border-bottom:none}
-.tx .desc{font-size:14px}
-.tx .date{font-size:12px;color:#777}
-.tx .amount{font-weight:bold}
+.wallet h2{margin:6px 0 0;font-size:32px}
+.stats{display:flex;gap:16px;margin-top:16px}
+.stat{background:#fff;padding:14px;border-radius:12px;flex:1}
+.history{background:#fff;border-radius:16px;padding:20px;margin-top:20px}
+.tx{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee}
 .plus{color:var(--primary)}
 .minus{color:var(--danger)}
-
-.btn-delete{
-  background:var(--danger);
-  color:#fff;
-  border:none;
-  padding:4px 10px;
-  border-radius:12px;
-  cursor:pointer;
-  margin-left:8px;
-}
-
-/* ADMIN */
-#loginBox,#financeForm{
-  display:none;
-  background:var(--card);
-  border-radius:16px;
-  padding:20px;
-  margin-top:24px;
-  box-shadow:0 6px 16px rgba(0,0,0,.08);
-}
-input,button{
-  width:100%;
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #ddd;
-  margin-bottom:10px;
-}
-.btn-add{
-  background:var(--primary);
-  color:#fff;
-  border:none;
-  cursor:pointer;
-}
+.btn-delete{background:var(--danger);color:#fff;border:none;padding:4px 10px;border-radius:10px;cursor:pointer}
+.btn-edit{background:var(--edit);color:#fff;border:none;padding:4px 10px;border-radius:10px;cursor:pointer;margin-right:6px}
+#loginBox,#financeForm{display:none;background:#fff;padding:20px;border-radius:12px;margin-top:20px}
+input,button{width:100%;padding:10px;margin-bottom:8px}
+.btn-add{background:var(--primary);color:#fff;border:none}
 </style>
 </head>
 
 <body>
 
 <header>
-  <h1>💳 DTI Finance Wallet</h1>
+  <h3>💳 DTI Finance Wallet</h3>
   <div>
     <button id="loginBtn" onclick="showLogin()">Admin Login</button>
     <button id="logoutBtn" onclick="logout()" style="display:none">Logout</button>
@@ -146,173 +72,155 @@ input,button{
 
 <div class="container">
 
-  <!-- WALLET -->
   <div class="wallet">
-    <span>Saldo Saat Ini</span>
+    <span>Saldo</span>
     <h2 id="saldoHero">Rp 0</h2>
   </div>
 
-  <!-- STATS -->
   <div class="stats">
-    <div class="stat">
-      <span>Pemasukan</span>
-      <h3 class="income" id="totalInput">0</h3>
-    </div>
-    <div class="stat">
-      <span>Pengeluaran</span>
-      <h3 class="expense" id="totalOutput">0</h3>
-    </div>
+    <div class="stat">Pemasukan<br><b id="totalInput">0</b></div>
+    <div class="stat">Pengeluaran<br><b id="totalOutput">0</b></div>
   </div>
 
-  <!-- HISTORY -->
   <div class="history">
     <h3>Riwayat Transaksi</h3>
     <div id="historyList"></div>
   </div>
 
-  <!-- ADMIN LOGIN -->
+  <!-- LOGIN -->
   <div id="loginBox">
     <h3>Login Admin</h3>
     <input id="username" placeholder="Username">
     <input id="password" type="password" placeholder="Password">
     <button class="btn-add" onclick="login()">Login</button>
-    <p id="loginMsg" style="color:red;text-align:center"></p>
+    <p id="loginMsg" style="color:red"></p>
   </div>
 
-  <!-- ADMIN FORM -->
+  <!-- FORM -->
   <div id="financeForm">
-    <h3>Tambah Transaksi</h3>
-    <input type="date" id="timelapse" required>
-    <input type="number" id="input" placeholder="Input" value="0">
-    <input type="number" id="output" placeholder="Output" value="0">
+    <h3 id="formTitle">Tambah Transaksi</h3>
+    <input type="date" id="timelapse">
+    <input type="number" id="input" placeholder="Input">
+    <input type="number" id="output" placeholder="Output">
     <input type="text" id="description" placeholder="Deskripsi">
-    <button class="btn-add" onclick="addData()">Simpan</button>
+    <button class="btn-add" onclick="saveData()">Simpan</button>
   </div>
 
 </div>
 
 <script>
-const API_URL =
-  'https://script.google.com/macros/s/AKfycbwVdahYSS-hmo0KIuxigPQ0QvlC794jLcEbtBITj5o2fkoT0c54Y5CfoAxOcVIil3dS/exec';
+const API_URL='https://script.google.com/macros/s/AKfycbwVdahYSS-hmo0KIuxigPQ0QvlC794jLcEbtBITj5o2fkoT0c54Y5CfoAxOcVIil3dS/exec';
+let IS_ADMIN=false;
+let EDIT_ROW=null;
 
-let IS_ADMIN = false;
-
-/* ===== LOGIN ===== */
-function showLogin(){
-  loginBox.style.display = 'block';
-}
-
+/* LOGIN */
+function showLogin(){loginBox.style.display='block'}
 function login(){
-  fetch(API_URL + '?action=login', {
-    method:'POST',
-    body:JSON.stringify({
-      username: username.value,
-      password: password.value
-    })
-  })
-  .then(r=>r.json())
-  .then(res=>{
-    if(res.status==='success'){
-      IS_ADMIN = true;
-      loginBox.style.display='none';
-      financeForm.style.display='block';
-      loginBtn.style.display='none';
-      logoutBtn.style.display='inline-block';
-      fetchData();
-    } else {
-      loginMsg.textContent = res.message;
-    }
-  });
-}
-
-function logout(){
-  IS_ADMIN = false;
-  financeForm.style.display='none';
-  loginBtn.style.display='inline-block';
-  logoutBtn.style.display='none';
-  fetchData();
-}
-
-/* ===== DATA ===== */
-function fetchData(){
-  fetch(API_URL)
-    .then(r=>r.json())
-    .then(res=>{
-      let tin = 0, tout = 0;
-      historyList.innerHTML = '';
-
-      res.data
-        // 🔥 FILTER BARIS VALID SAJA
-        .filter(d => Number(d.Input) > 0 || Number(d.Output) > 0)
-        .forEach(d => {
-
-          tin += Number(d.Input);
-          tout += Number(d.Output);
-
-          historyList.innerHTML += `
-            <div class="tx">
-              <div>
-                <div class="desc">${d.Description || '-'}</div>
-                <div class="date">${d.Timelapse.split('T')[0]}</div>
-              </div>
-              <div>
-                <span class="amount ${d.Input > 0 ? 'plus' : 'minus'}">
-                  ${d.Input > 0 ? '+' + d.Input : '-' + d.Output}
-                </span>
-                ${
-                  IS_ADMIN
-                    ? `<button class="btn-delete"
-                         onclick="deleteData(${d.row})">×</button>`
-                    : ''
-                }
-              </div>
-            </div>
-          `;
-        });
-
-      totalInput.textContent = tin;
-      totalOutput.textContent = tout;
-      saldoHero.textContent = 'Rp ' + (tin - tout);
-    });
-}
-
-function addData(){
-  fetch(API_URL,{
-    method:'POST',
-    body:JSON.stringify({
-      Timelapse: timelapse.value,
-      Input: Number(input.value),
-      Output: Number(output.value),
-      Description: description.value,
-      role:'admin'
-    })
-  }).then(()=>{
-    timelapse.value='';
-    input.value=0;
-    output.value=0;
-    description.value='';
+ fetch(API_URL+'?action=login',{
+  method:'POST',
+  body:JSON.stringify({username:username.value,password:password.value})
+ }).then(r=>r.json()).then(res=>{
+  if(res.status==='success'){
+    IS_ADMIN=true;
+    loginBox.style.display='none';
+    financeForm.style.display='block';
+    loginBtn.style.display='none';
+    logoutBtn.style.display='inline-block';
     fetchData();
+  } else loginMsg.textContent=res.message;
+ });
+}
+function logout(){
+ IS_ADMIN=false;
+ financeForm.style.display='none';
+ loginBtn.style.display='inline-block';
+ logoutBtn.style.display='none';
+ fetchData();
+}
+
+/* LOAD DATA */
+function fetchData(){
+ fetch(API_URL).then(r=>r.json()).then(res=>{
+  let tin=0,tout=0;
+  historyList.innerHTML='';
+  res.data
+  .filter(d=>Number(d.Input)>0||Number(d.Output)>0)
+  .forEach(d=>{
+    tin+=Number(d.Input);
+    tout+=Number(d.Output);
+    historyList.innerHTML+=`
+      <div class="tx">
+        <div>
+          <b>${d.Description||'-'}</b><br>
+          <small>${d.Timelapse.split('T')[0]}</small>
+        </div>
+        <div>
+          <span class="${d.Input>0?'plus':'minus'}">
+            ${d.Input>0?'+':'-'}${d.Input>0?d.Input:d.Output}
+          </span>
+          ${IS_ADMIN?`
+            <button class="btn-edit" onclick="editData(${d.row},'${d.Timelapse}','${d.Input}','${d.Output}','${d.Description}')">Edit</button>
+            <button class="btn-delete" onclick="deleteData(${d.row})">X</button>`:''}
+        </div>
+      </div>`;
   });
+  totalInput.textContent=tin;
+  totalOutput.textContent=tout;
+  saldoHero.textContent='Rp '+(tin-tout);
+ });
 }
 
+/* CREATE / UPDATE */
+function saveData(){
+ if(EDIT_ROW){
+   fetch(API_URL,{
+     method:'PUT',
+     body:JSON.stringify({
+       row:EDIT_ROW,
+       Timelapse:timelapse.value,
+       Input:Number(input.value),
+       Output:Number(output.value),
+       Description:description.value,
+       role:'admin'
+     })
+   }).then(()=>{EDIT_ROW=null;fetchData();});
+ }else{
+   fetch(API_URL,{
+     method:'POST',
+     body:JSON.stringify({
+       Timelapse:timelapse.value,
+       Input:Number(input.value),
+       Output:Number(output.value),
+       Description:description.value,
+       role:'admin'
+     })
+   }).then(fetchData);
+ }
+}
+
+/* EDIT */
+function editData(row,t,i,o,d){
+ EDIT_ROW=row;
+ timelapse.value=t.split('T')[0];
+ input.value=i;
+ output.value=o;
+ description.value=d;
+}
+
+/* DELETE */
 function deleteData(row){
-  if(!confirm('Hapus transaksi ini?')) return;
-
-  fetch(API_URL,{
-    method:'DELETE',
-    body:JSON.stringify({
-      row: row,
-      role:'admin'
-    })
-  }).then(fetchData);
+ if(!confirm('Hapus transaksi?'))return;
+ fetch(API_URL,{
+   method:'DELETE',
+   body:JSON.stringify({row,role:'admin'})
+ }).then(fetchData);
 }
 
-/* INIT (USER MODE) */
 fetchData();
 </script>
-
 </body>
 </html>
+
 
 
 
