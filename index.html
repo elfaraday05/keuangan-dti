@@ -10,29 +10,19 @@
   --primary:#00b894;
   --danger:#d63031;
   --edit:#0984e3;
-  --dark:#2d3436;
   --bg:#f5f6fa;
-  --card:#ffffff;
 }
 body{
   margin:0;
-  font-family:'Segoe UI',system-ui,sans-serif;
+  font-family:'Segoe UI',sans-serif;
   background:var(--bg);
 }
 header{
   background:linear-gradient(135deg,#0984e3,#00b894);
   color:#fff;
-  padding:16px 24px;
+  padding:16px;
   display:flex;
   justify-content:space-between;
-}
-header button{
-  background:rgba(255,255,255,.2);
-  border:1px solid rgba(255,255,255,.5);
-  color:#fff;
-  padding:6px 14px;
-  border-radius:20px;
-  cursor:pointer;
 }
 .container{
   max-width:1000px;
@@ -42,18 +32,17 @@ header button{
 .wallet{
   background:linear-gradient(135deg,#6c5ce7,#0984e3);
   color:#fff;
-  border-radius:20px;
   padding:24px;
+  border-radius:20px;
 }
-.wallet h2{margin:6px 0 0;font-size:32px}
 .stats{display:flex;gap:16px;margin-top:16px}
 .stat{background:#fff;padding:14px;border-radius:12px;flex:1}
-.history{background:#fff;border-radius:16px;padding:20px;margin-top:20px}
+.history{background:#fff;padding:20px;border-radius:16px;margin-top:20px}
 .tx{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee}
 .plus{color:var(--primary)}
 .minus{color:var(--danger)}
-.btn-delete{background:var(--danger);color:#fff;border:none;padding:4px 10px;border-radius:10px;cursor:pointer}
-.btn-edit{background:var(--edit);color:#fff;border:none;padding:4px 10px;border-radius:10px;cursor:pointer;margin-right:6px}
+.btn-delete{background:var(--danger);color:#fff;border:none;padding:4px 10px;border-radius:10px}
+.btn-edit{background:var(--edit);color:#fff;border:none;padding:4px 10px;border-radius:10px;margin-right:6px}
 #loginBox,#financeForm{display:none;background:#fff;padding:20px;border-radius:12px;margin-top:20px}
 input,button{width:100%;padding:10px;margin-bottom:8px}
 .btn-add{background:var(--primary);color:#fff;border:none}
@@ -98,7 +87,7 @@ input,button{width:100%;padding:10px;margin-bottom:8px}
 
   <!-- FORM -->
   <div id="financeForm">
-    <h3 id="formTitle">Tambah Transaksi</h3>
+    <h3 id="formTitle">Tambah / Edit Transaksi</h3>
     <input type="date" id="timelapse">
     <input type="number" id="input" placeholder="Input">
     <input type="number" id="output" placeholder="Output">
@@ -127,7 +116,7 @@ function login(){
     loginBtn.style.display='none';
     logoutBtn.style.display='inline-block';
     fetchData();
-  } else loginMsg.textContent=res.message;
+  }else loginMsg.textContent='Login gagal';
  });
 }
 function logout(){
@@ -144,8 +133,8 @@ function fetchData(){
   let tin=0,tout=0;
   historyList.innerHTML='';
   res.data
-  .filter(d=>Number(d.Input)>0||Number(d.Output)>0)
-  .forEach(d=>{
+   .filter(d=>Number(d.Input)>0||Number(d.Output)>0)
+   .forEach(d=>{
     tin+=Number(d.Input);
     tout+=Number(d.Output);
     historyList.innerHTML+=`
@@ -159,23 +148,27 @@ function fetchData(){
             ${d.Input>0?'+':'-'}${d.Input>0?d.Input:d.Output}
           </span>
           ${IS_ADMIN?`
-            <button class="btn-edit" onclick="editData(${d.row},'${d.Timelapse}','${d.Input}','${d.Output}','${d.Description}')">Edit</button>
-            <button class="btn-delete" onclick="deleteData(${d.row})">X</button>`:''}
+            <button class="btn-edit"
+              onclick="editData(${d.row},'${d.Timelapse}','${d.Input}','${d.Output}','${d.Description}')">
+              Edit</button>
+            <button class="btn-delete" onclick="deleteData(${d.row})">X</button>
+          `:''}
         </div>
       </div>`;
-  });
+   });
   totalInput.textContent=tin;
   totalOutput.textContent=tout;
   saldoHero.textContent='Rp '+(tin-tout);
  });
 }
 
-/* CREATE / UPDATE */
+/* SAVE (CREATE + UPDATE) */
 function saveData(){
  if(EDIT_ROW){
    fetch(API_URL,{
-     method:'PUT',
+     method:'POST',
      body:JSON.stringify({
+       action:'update',
        row:EDIT_ROW,
        Timelapse:timelapse.value,
        Input:Number(input.value),
@@ -211,8 +204,12 @@ function editData(row,t,i,o,d){
 function deleteData(row){
  if(!confirm('Hapus transaksi?'))return;
  fetch(API_URL,{
-   method:'DELETE',
-   body:JSON.stringify({row,role:'admin'})
+   method:'POST',
+   body:JSON.stringify({
+     action:'delete',
+     row:row,
+     role:'admin'
+   })
  }).then(fetchData);
 }
 
@@ -220,6 +217,7 @@ fetchData();
 </script>
 </body>
 </html>
+
 
 
 
